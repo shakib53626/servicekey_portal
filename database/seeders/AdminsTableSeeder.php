@@ -17,10 +17,15 @@ class AdminsTableSeeder extends Seeder
     public function run()
     {
         Admin::create([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
-            'phone' => '0172260011',
-            'password' => Hash::make('password'),
+            'first_name'         => 'Shakibul',
+            'last_name'          => 'Islam',
+            'email'              => 'admin@gmail.com',
+            'phone'              => '0172260011',
+            'national_id_number' => '1234567891',
+            'gender'             => 'male',
+            'permanent_address'  => 'House # 21, Road # 17, Block # D, Mirpur-1216, Dhaka',
+            'present_address'    => 'House # 21, Road # 17, Block # D, Mirpur-1216, Dhaka',
+            'password'           => Hash::make('password'),
         ]);
     }
 }

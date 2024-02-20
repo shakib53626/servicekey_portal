@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminLoginRequest;
+use App\Http\Requests\Admin\AdminRegisterRequest;
 use App\Http\Resources\Admin\AdminAuthResource;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +24,22 @@ class AdminAuthController extends Controller
         }
 
         return $this->makeToken($admin);
+    }
+
+    public function register(AdminRegisterRequest $request){
+        try {
+
+            $admin = Admin::create($request->validated());
+
+            if($admin->is_verified){
+                return $this->makeToken($admin);
+            }else{
+                return send_ms('Waiting for admin verified', true, 200);
+            }
+
+        } catch (\Exception $th) {
+            throw $th;
+        }
     }
 
 

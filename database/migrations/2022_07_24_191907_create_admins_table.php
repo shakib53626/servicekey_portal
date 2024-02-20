@@ -15,9 +15,15 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->string('phone')->unique();
+            $table->string('national_id_number')->unique();
+            $table->string('permanent_address', 255)->nullable();
+            $table->string('present_address', 255)->nullable();
+            $table->string('gender');
+            $table->tinyInteger('is_verified')->default(0)->comment("0 for not verified, 1 for verified");
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
