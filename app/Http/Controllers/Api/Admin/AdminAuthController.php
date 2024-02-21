@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminLoginRequest;
 use App\Http\Requests\Admin\AdminRegisterRequest;
+use App\Http\Requests\Admin\ResetPasswordRequest;
 use App\Http\Resources\Admin\AdminAuthResource;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
@@ -26,10 +27,16 @@ class AdminAuthController extends Controller
                 ]);
             }
 
-            return $this->makeToken($admin);
+            $token =  $admin->createToken('admin-token')->plainTextToken;
+            $data = [
+                'success' => true,
+                'user' => $admin,
+                'token' => $token,
+            ];
+            return response()->json($data);
 
         }else{
-            return send_ms('Your Account is Not Approad Right Now.', true, 403);
+            return send_ms('Your Account is Not Approved Right Now.', true, 403);
         }
     }
 
@@ -39,7 +46,13 @@ class AdminAuthController extends Controller
             $admin = Admin::create($request->validated());
 
             if($admin->is_verified){
-                return $this->makeToken($admin);
+                $token = $admin->createToken('admin-token')->plainTextToken;
+                $data  = [
+                    'success' => true,
+                    'user'    => $admin,
+                    'token'   => $token,
+                ];
+                return response()->json($data);
             }else{
                 return send_ms('Waiting for admin verified', true, 200);
             }
@@ -49,18 +62,21 @@ class AdminAuthController extends Controller
         }
     }
 
+    public function resetPassword(ResetPasswordRequest $request){
+        try {
+            $admin = Admin::where('email', $request->email_phone)
+                        ->orWhere('phone', $request->email_phone)
+                        ->first();
 
-    public function makeToken($admin)
-    {
-        $token =  $admin->createToken('admin-token')->plainTextToken;
-        $data = [
-            'success' => true,
-            'user' => $admin,
-            'token' => $token,
-        ];
-        return response()->json($data);
+            $admin->tmp_password = $request->password;
+            $admin->save();
+
+            return send_ms('Reset Password Application Successfully Submit', true, 200);
+
+        } catch (\Exception $th) {
+            throw $th;
+        }
     }
-
 
     public function logout(Request $request)
     {

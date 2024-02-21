@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(AdminAuthController::class)->group(function () {
     Route::post('/login', 'login');
     Route::post('/register', 'register');
+    Route::post('/reset-password', 'resetPassword');
 });
 
 

@@ -25,7 +25,8 @@ class Admin extends Authenticatable
         'gender',
         'permanent_address',
         'present_address',
-        'national_id_number'
+        'national_id_number',
+        'tmp_password'
     ];
 
     /**

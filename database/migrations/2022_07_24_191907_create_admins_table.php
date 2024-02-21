@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('gender');
             $table->tinyInteger('is_verified')->default(0)->comment("0 for not verified, 1 for verified");
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('tmp_password')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
