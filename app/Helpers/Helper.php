@@ -1,12 +1,12 @@
 <?php
 
 
-function send_ms($msg,$status,$code){
-
-   return $res = [
-        'status' => $status,
+function send_ms($msg, $status, $code)
+{
+    $res = [
+        'success' => $status,
         'message' => $msg,
-   ];
-    return response()->json($res,$code);
-}
+    ];
 
+    return response()->json($res, $code);
+}

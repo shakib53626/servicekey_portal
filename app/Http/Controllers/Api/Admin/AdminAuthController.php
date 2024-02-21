@@ -17,13 +17,20 @@ class AdminAuthController extends Controller
     public function login(AdminLoginRequest $request)
     {
         $admin = Admin::where('phone', $request->phone)->first();
-        if (!$admin || !Hash::check($request->password, $admin->password)) {
-            throw ValidationException::withMessages([
-                'phone' => ['The provided credentials are incorrect.'],
-            ]);
-        }
 
-        return $this->makeToken($admin);
+        if($admin->is_verified){
+
+            if (!$admin || !Hash::check($request->password, $admin->password)) {
+                throw ValidationException::withMessages([
+                    'phone' => ['The provided credentials are incorrect.'],
+                ]);
+            }
+
+            return $this->makeToken($admin);
+
+        }else{
+            return send_ms('Your Account is Not Approad Right Now.', true, 403);
+        }
     }
 
     public function register(AdminRegisterRequest $request){
@@ -46,11 +53,12 @@ class AdminAuthController extends Controller
     public function makeToken($admin)
     {
         $token =  $admin->createToken('admin-token')->plainTextToken;
-        return (new AdminAuthResource($admin))
-            ->additional(['meta' => [
-                'token' => $token,
-                'token_type' => 'Bearer',
-            ]]);
+        $data = [
+            'success' => true,
+            'user' => $admin,
+            'token' => $token,
+        ];
+        return response()->json($data);
     }
 
 
