@@ -16,6 +16,7 @@ Route::middleware('auth:admin-api')->group(function () {
 
     Route::controller(AdminAuthController::class)->group(function () {
         Route::post('/logout', 'logout');
+        Route::post('/change-password', 'changePassword');
         Route::get('/me',  'user');
     });
 });

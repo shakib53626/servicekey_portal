@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminLoginRequest;
 use App\Http\Requests\Admin\AdminRegisterRequest;
+use App\Http\Requests\Admin\ChangePasswordRequest;
 use App\Http\Requests\Admin\ResetPasswordRequest;
 use App\Http\Resources\Admin\AdminAuthResource;
 use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 class AdminAuthController extends Controller
@@ -55,6 +57,22 @@ class AdminAuthController extends Controller
                 return response()->json($data);
             }else{
                 return send_ms('Waiting for admin verified', true, 200);
+            }
+
+        } catch (\Exception $th) {
+            throw $th;
+        }
+    }
+
+    public function changePassword(ChangePasswordRequest $request){
+        try {
+            $admin = Admin::where('id', Auth::user()->id)->first();
+            if(Hash::check($request->old_password, $admin->password)){
+                $admin->password = $request->new_password;
+                $admin->save();
+                return send_ms('Password Changed Successfuly', true, 200);
+            }else{
+                return send_ms('Incorrect old password', false, 201);
             }
 
         } catch (\Exception $th) {
