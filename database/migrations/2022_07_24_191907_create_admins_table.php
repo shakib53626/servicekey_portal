@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('phone')->unique();
+            $table->string('designation')->nullable();
             $table->string('national_id_number')->unique();
             $table->string('permanent_address', 255)->nullable();
             $table->string('present_address', 255)->nullable();

@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\AdminRegisterRequest;
 use App\Http\Requests\Admin\ChangePasswordRequest;
 use App\Http\Requests\Admin\ResetPasswordRequest;
 use App\Http\Resources\Admin\AdminAuthResource;
+use App\Http\Resources\Admin\ResetPasswordRequestListResource;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -105,5 +106,40 @@ class AdminAuthController extends Controller
     public function user(Request $request)
     {
         return AdminAuthResource::make($request->user());
+    }
+
+    public function resetPasswordRequestList(){
+        try {
+            $admin = Admin::whereNotNull('tmp_password')->get();
+
+            $data = [
+                'success' => true,
+                'data'    => ResetPasswordRequestListResource::collection($admin),
+            ];
+            return response()->json($data, 200);
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+    public function resetPasswordApproval(Request $request){
+
+
+        if($request->approve_id){
+
+            $admin = Admin::where('id', $request->approve_id)->first();
+            $admin->password = $admin->tmp_password;
+            $admin->tmp_password = null;
+            $admin->save();
+            return send_ms('User Password Changed Successfully', true, 200);
+
+        }else{
+
+            $admin = Admin::where('id', $request->remove_id)->first();
+            $admin->tmp_password = null;
+            $admin->save();
+            return send_ms('User Password Changed Request Removed', true, 200);
+
+        }
     }
 }

@@ -17,6 +17,8 @@ Route::middleware('auth:admin-api')->group(function () {
     Route::controller(AdminAuthController::class)->group(function () {
         Route::post('/logout', 'logout');
         Route::post('/change-password', 'changePassword');
+        Route::get('/reset-password-request-list', 'resetPasswordRequestList');
+        Route::post('/reset-password-approve', 'resetPasswordApproval');
         Route::get('/me',  'user');
     });
 });
