@@ -11,3 +11,13 @@ function send_ms($msg, $status, $code)
 
     return response()->json($res, $code);
 }
+
+function sendError($message, $code = 400)
+{
+    $response = [
+        "success" => false,
+        "message" => $message,
+    ];
+
+    return response()->json($response, $code);
+}
