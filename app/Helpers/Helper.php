@@ -21,3 +21,14 @@ function sendError($message, $code = 400)
 
     return response()->json($response, $code);
 }
+
+function sendResponse($data, $status, $msg, $code){
+    $res = [
+        'success' => $status,
+        'status'  => $code,
+        'message' => $msg,
+        'result'  => $data,
+    ];
+
+    return response()->json($res, $code);
+}

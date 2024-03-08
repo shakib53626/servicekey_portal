@@ -23,6 +23,9 @@ Route::middleware('auth:admin-api')->group(function () {
     });
 
     Route::controller(PermissionController::class)->group(function () {
+        Route::get('/permissions', 'index');
         Route::post('/permissions', 'store');
+        Route::get('/permissions/{id}', 'show');
+        Route::put('/permissions/{id}', 'update');
     });
 });
