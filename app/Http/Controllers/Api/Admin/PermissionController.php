@@ -42,7 +42,6 @@ class PermissionController extends Controller
         // if (!$request->user()->hasPermission('permissions-create')) {
         //     return $this->sendError(__("common.unauthorized"));
         // }
-
         try {
 
             $permission = new Permission();
@@ -74,6 +73,28 @@ class PermissionController extends Controller
             $permission->save();
 
             return send_ms('Permission Updated Successfully', true, 200);
+
+        } catch (\Exception $th) {
+            throw $th;
+        }
+    }
+
+    public function groupByData(){
+        try {
+
+            $permissions = Permission::all();
+
+            // Group permissions by the first letter of name
+            $groupedData = [];
+            foreach ($permissions as $item) {
+                $groupName = strtolower(explode('-', $item->name)[0]);
+                $groupedData[$groupName][] = $item->toArray();
+            }
+
+            // Convert associative array to indexed array
+            $indexedData = array_values($groupedData);
+
+            return sendResponse($indexedData, true, "Grouped Data List", 200);
 
         } catch (\Exception $th) {
             throw $th;

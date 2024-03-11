@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\AdminAuthController;
 use App\Http\Controllers\Api\Admin\PermissionController;
+use App\Http\Controllers\Api\Admin\RoleController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,8 +25,13 @@ Route::middleware('auth:admin-api')->group(function () {
 
     Route::controller(PermissionController::class)->group(function () {
         Route::get('/permissions', 'index');
+        Route::get('/permissions/group', 'groupByData');
         Route::post('/permissions', 'store');
         Route::get('/permissions/{id}', 'show');
         Route::put('/permissions/{id}', 'update');
+    });
+
+    Route::controller(RoleController::class)->group(function () {
+        Route::post('/roles', 'store');
     });
 });
